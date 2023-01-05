@@ -45,13 +45,13 @@
                 </dxsch:DataSource>
             </dxsch:SchedulerControl.DataSource>
             <dxsch:SchedulerControl.RibbonActions>
-            <dxb:InsertAction ContainerName="{x:Static dxsch:DefaultBarItemNames.Pages_Home}" Index="6">
-                <dxr:RibbonPageGroup Caption="Restrictions">
-                    <dxb:BarCheckItem x:Name="barCheckItem1" Content="Disable Creating Appointments" RibbonStyle="Large" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" CheckedChanged="BarButtonItem_ItemClick"/>
+                <dxb:InsertAction ContainerName="{x:Static dxsch:DefaultBarItemNames.Pages_Home}" Index="6">
+                    <dxr:RibbonPageGroup Caption="Restrictions">
+                        <dxb:BarCheckItem x:Name="barCheckItem1" Content="Disable Creating Appointments" RibbonStyle="Large" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" CheckedChanged="BarButtonItem_ItemClick"/>
                         <dxb:BarCheckItem x:Name="barCheckItem2" Content="Disable Appointment Conflicts" RibbonStyle="Large" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" CheckedChanged="barCheckItem2_CheckedChanged"/>
                     </dxr:RibbonPageGroup>
-            </dxb:InsertAction>
-</dxsch:SchedulerControl.RibbonActions>
+                </dxb:InsertAction>
+            </dxsch:SchedulerControl.RibbonActions>
         </dxsch:SchedulerControl>
     </Grid>
 </Window>
