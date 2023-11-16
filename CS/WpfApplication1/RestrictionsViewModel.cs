@@ -4,13 +4,10 @@ using System.Linq;
 using DevExpress.Mvvm.POCO;
 using DevExpress.XtraScheduler;
 
-namespace WpfApplication1
-{
-    public class RestrictionsViewModel
-    {
+namespace WpfApplication1 {
+    public class RestrictionsViewModel {
         readonly SampleDataGenerator data = new SampleDataGenerator();
-        protected RestrictionsViewModel()
-        {
+        protected RestrictionsViewModel() {
             AppointmentsPerDay = 10;
             DayCount = 2;
             ResourceCount = 3;
@@ -26,7 +23,7 @@ namespace WpfApplication1
         }
         protected void OnResourceCountChanged() {
             data.SetUp(DayCount, ResourceCount, AppointmentsPerDay);
-        }   
+        }
         public static RestrictionsViewModel Create() {
             return ViewModelSource.Create(() => new RestrictionsViewModel());
         }

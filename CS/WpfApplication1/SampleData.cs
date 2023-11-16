@@ -3,8 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using DevExpress.Mvvm;
 
-namespace WpfApplication1
-{
+namespace WpfApplication1 {
     public class SampleDataGenerator {
         static int[] Statuses = new int[] { 0, 2, 3, 4 };
         static int[] Labels = new int[] { 1, 2, 4, 6, 8 };
