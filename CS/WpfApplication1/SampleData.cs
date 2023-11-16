@@ -91,12 +91,12 @@ namespace WpfApplication1
             DateTime newEndDate = this.startDate.AddDays(newDayCount);
             if (newEndDate.Equals(this.endDate))
                 return false;
-            for (DateTime date = this.endDate; date > newEndDate; date -= TimeSpan.FromDays(1))
+            for (DateTime dateRemove = this.endDate; dateRemove > newEndDate; dateRemove -= TimeSpan.FromDays(1))
                 for (int i = 0; i < this.appointmentsPerDay; i++)
                     Appointments.RemoveAt(Appointments.Count - 1);
-            for (DateTime date = this.endDate; date < newEndDate; date += TimeSpan.FromDays(1))
+            for (DateTime dateAdd = this.endDate; dateAdd < newEndDate; dateAdd += TimeSpan.FromDays(1))
                 for (int i = 0; i < this.appointmentsPerDay; i++)
-                    Appointments.Add(CreateAppointment(Appointments.Count - 1, date, CalculateDuration(i), Resources.Count));
+                    Appointments.Add(CreateAppointment(Appointments.Count - 1, dateAdd, CalculateDuration(i), Resources.Count));
             this.endDate = newEndDate;
             return true;
         }
