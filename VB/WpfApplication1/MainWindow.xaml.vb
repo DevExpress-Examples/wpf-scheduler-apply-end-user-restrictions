@@ -37,8 +37,7 @@ Namespace WpfApplication1
 
 #End Region  ' #CustomAllowAppointmentConflicts 
 #Region "#IsIntervalAllowed"
-        'This method is used to check 
-        'whether the target interval intersects with the resticted interval:
+        'This method checks whether the target interval intersects with the resticted interval:
         Private Function IsIntervalAllowed(ByVal interval As TimeInterval) As Boolean
             Dim dayStart As Date = interval.Start.Date
             While dayStart < interval.End
