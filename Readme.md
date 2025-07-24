@@ -5,7 +5,7 @@
 [![](https://img.shields.io/badge/💬_Leave_Feedback-feecdd?style=flat-square)](#does-this-example-address-your-development-requirementsobjectives)
 <!-- default badges end -->
 
-# WPF Scheduler - Apply End-User Restrictions
+# WPF Scheduler - Apply user restrictions
 
 This example handles [CustomAllowAppointmentCreate](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentCreate) and [CustomAllowAppointmentConflicts](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentConflicts) events and does not allow users to create appointments on a particular time interval and drag existing appointments to it. In this example, the **Restrictions** ribbon group contains items that allow you to unsubscribe from these events.
 
