@@ -7,35 +7,11 @@
 
 # WPF Scheduler - Apply User Restrictions
 
-In this example, users cannot create new appointments for specific time intervals and drag appointments into restricted intervals. The scheduler checks each time range before a user creates or drag an appointment. 
+In this example, a user cannot create new appointments for a specific time interval and drag appointments into this interval. The [Scheduler](https://docs.devexpress.com/WPF/114881/controls-and-libraries/scheduler) checks each time range before a user creates or drag an appointment. 
 
 ![Apply User Restrictions](./Images/scheduler.jpg)
 
-Users can toggle these restrictions at runtime in the **Restrictions** ribbon group.
-
 ## Implementation Details
-
-### Prevent Appointment Creation
-
-The [`CustomAllowAppointmentCreate`](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentCreate) event blocks new appointments in restricted intervals. The code example checks whether the selected interval intersects with the lunch break (12:00–13:00):
-
-```csharp
-private void schedulerControl1_CustomAllowAppointmentCreate(object sender, AppointmentItemOperationEventArgs e) {
-    var selectedInterval = new TimeInterval(schedulerControl1.SelectedInterval.Start, schedulerControl1.SelectedInterval.End);
-    e.Allow = IsIntervalAllowed(selectedInterval);
-}
-```
-
-### Prevent Conflicts
-
-The [CustomAllowAppointmentConflicts](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentConflicts) event prevents dragging appointments into restricted time ranges. If the interval is not valid, the scheduler cancels the action:
-
-```csharp
-private void schedulerControl1_CustomAllowAppointmentConflicts(object sender, AppointmentItemConflictEventArgs e) {
-    if (!IsIntervalAllowed(e.Interval))
-        e.Conflicts.Add(e.AppointmentClone);
-}
-```
 
 ### Define Restricted Interval
 
@@ -45,7 +21,7 @@ The restricted interval covers the lunch break (12:00–13:00):
 TimeInterval lunchTime = new TimeInterval(DateTime.Today.AddHours(12), TimeSpan.FromHours(1));
 ```
 
-The helper method returns `false` if any part of the selected interval overlaps with the restricted time:
+The helper method returns `false` if any part of the selected interval overlaps with the restricted time range:
 
 ```csharp
 private bool IsIntervalAllowed(TimeInterval interval) {
@@ -59,16 +35,25 @@ private bool IsIntervalAllowed(TimeInterval interval) {
 }
 ```
 
-### Toggle Restrictions
+### Prevent Appointment Creation
 
-Users can toggle restrictions through ribbon controls. Each control adds or removes the corresponding event handler:
+The [`CustomAllowAppointmentCreate`](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentCreate) event blocks new appointment creation if the selected interval intersects with the lunch break:
 
 ```csharp
-private void barCheckItem1_CheckedChanged(...) {
-    if (barCheckItem1.IsChecked == true)
-        schedulerControl1.CustomAllowAppointmentCreate -= schedulerControl1_CustomAllowAppointmentCreate;
-    else
-        schedulerControl1.CustomAllowAppointmentCreate += schedulerControl1_CustomAllowAppointmentCreate;
+private void schedulerControl1_CustomAllowAppointmentCreate(object sender, AppointmentItemOperationEventArgs e) {
+    var selectedInterval = new TimeInterval(schedulerControl1.SelectedInterval.Start, schedulerControl1.SelectedInterval.End);
+    e.Allow = IsIntervalAllowed(selectedInterval);
+}
+```
+
+### Prevent Appointment Dragging
+
+The [CustomAllowAppointmentConflicts](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentConflicts) event prevents dragging appointments into the lunch break time range:
+
+```csharp
+private void schedulerControl1_CustomAllowAppointmentConflicts(object sender, AppointmentItemConflictEventArgs e) {
+    if (!IsIntervalAllowed(e.Interval))
+        e.Conflicts.Add(e.AppointmentClone);
 }
 ```
 
