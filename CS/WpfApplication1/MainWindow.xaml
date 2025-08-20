@@ -14,12 +14,10 @@
         <dxsch:SchedulerControl Name="schedulerControl1"                                
                                 CommandBarStyle="Ribbon"        
                                 GroupType="Resource"
-                                AllowAppointmentConflicts="False"
-                                AllowAppointmentCreate="False"
                                 AllowReminders="False"                                
                                 FirstDayOfWeek="Monday"                                
-                                CustomAllowAppointmentConflicts="schedulerControl1_CustomAllowAppointmentConflicts"
-                                CustomAllowAppointmentCreate="schedulerControl1_CustomAllowAppointmentCreate">
+                                CustomAllowAppointmentConflicts="customAllowAppointmentConflictsHandler"
+                                CustomAllowAppointmentCreate="customAllowAppointmentCreateHandler">
             <!--endregion #main-->
             <dxsch:DayView x:Name="dayView1" ResourcesPerPage="2" ShowWorkTimeOnly="True"/>
             <dxsch:SchedulerControl.DataSource>
@@ -47,8 +45,8 @@
             <dxsch:SchedulerControl.RibbonActions>
                 <dxb:InsertAction ContainerName="{x:Static dxsch:DefaultBarItemNames.Pages_Home}" Index="6">
                     <dxr:RibbonPageGroup Caption="Restrictions">
-                        <dxb:BarCheckItem x:Name="barCheckItem1" Content="Disable Creating Appointments" RibbonStyle="Large" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" CheckedChanged="BarButtonItem_ItemClick"/>
-                        <dxb:BarCheckItem x:Name="barCheckItem2" Content="Disable Appointment Conflicts" RibbonStyle="Large" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" CheckedChanged="barCheckItem2_CheckedChanged"/>
+                        <dxb:BarCheckItem x:Name="barItemDisableCreatingAppointments" Content="Disable Creating Appointments" RibbonStyle="Large" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" />
+                        <dxb:BarCheckItem x:Name="barItemDisableAppointmentConflicts" Content="Disable Appointment Conflicts" RibbonStyle="Large" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" />
                     </dxr:RibbonPageGroup>
                 </dxb:InsertAction>
             </dxsch:SchedulerControl.RibbonActions>

@@ -12,31 +12,34 @@ namespace WpfApplication1 {
         }
 
         #region #CustomAllowAppointmentCreate
-        private void schedulerControl1_CustomAllowAppointmentCreate(object sender, AppointmentItemOperationEventArgs e) {
-            //Retrieve the selected interval:
+        private void customAllowAppointmentCreateHandler(object sender, AppointmentItemOperationEventArgs e) {
+            if((bool)barItemDisableCreatingAppointments.IsChecked) {
+                //If the "Disable Creating Appointments" bar item is checked, do not allow appointment creation.
+                e.Allow = false;
+                return;
+            }
             DateTimeRange selectedIntervalRange = schedulerControl1.SelectedInterval;
             TimeInterval selectedInterval = new TimeInterval(selectedIntervalRange.Start, selectedIntervalRange.End);
-
-            //Check whether the selected interval intersects with the resticted interval:
-            //If true, restrict appointment creation 
             e.Allow = IsIntervalAllowed(selectedInterval);
         }
         #endregion #CustomAllowAppointmentCreate
 
         #region #CustomAllowAppointmentConflicts
-        private void schedulerControl1_CustomAllowAppointmentConflicts(object sender, AppointmentItemConflictEventArgs e) {
-            //Obtain the selected interval:
+        private void customAllowAppointmentConflictsHandler(object sender, AppointmentItemConflictEventArgs e) {
+            if((bool)barItemDisableAppointmentConflicts.IsChecked) { 
+                e.Conflicts.Clear();
+                return;
+            }
+
             TimeInterval interval = e.Interval;
 
-            //If the appointment is to be moved to the restricted time interval, 
-            //Add the dragged appointment the conflicting appointments collection: 
             if (!IsIntervalAllowed(interval))
                 e.Conflicts.Add(e.AppointmentClone);
         }
         #endregion #CustomAllowAppointmentConflicts 
 
         #region #IsIntervalAllowed
-        //This method checks whether the target interval intersects with the resticted interval:
+        //This method checks whether the target interval intersects with the restricted interval
         private bool IsIntervalAllowed(TimeInterval interval) {
             DateTime dayStart = interval.Start.Date;
 
@@ -48,22 +51,5 @@ namespace WpfApplication1 {
             return true;
         }
         #endregion #IsIntervalAllowed
-
-        #region #Events
-        private void BarButtonItem_ItemClick(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e) {
-            if (barCheckItem1.IsChecked == true)
-                schedulerControl1.CustomAllowAppointmentCreate -= schedulerControl1_CustomAllowAppointmentCreate;
-            else
-                schedulerControl1.CustomAllowAppointmentCreate += schedulerControl1_CustomAllowAppointmentCreate;
-        }
-
-        private void barCheckItem2_CheckedChanged(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e) {
-            if (barCheckItem2.IsChecked == true)
-                schedulerControl1.CustomAllowAppointmentConflicts -= schedulerControl1_CustomAllowAppointmentConflicts;
-            else
-                schedulerControl1.CustomAllowAppointmentConflicts += schedulerControl1_CustomAllowAppointmentConflicts;
-        }
-        #endregion #Events	
-
     }
 }
