@@ -7,7 +7,12 @@
 
 # WPF Scheduler - Apply User Restrictions
 
-In this example, a user cannot create new appointments for a specific time interval and drag appointments into this interval. The [Scheduler](https://docs.devexpress.com/WPF/114881/controls-and-libraries/scheduler) checks each time range before a user creates or drag an appointment. 
+This example applies the following user restrictions:
+
+* Prevents users from creating new appointments.
+* Prevents users from moving appointments into the lunch break interval (12:00–13:00).
+
+In this example, the Ribbon UI displays the **Disable Creating Appointments** and **Disable Appointment Conflict** controls that [toggles these restrictions](#toggle-restrictions).
 
 ![Apply User Restrictions](./Images/scheduler.jpg)
 
@@ -15,13 +20,13 @@ In this example, a user cannot create new appointments for a specific time inter
 
 ### Define Restricted Interval
 
-The restricted interval covers the lunch break (12:00–13:00):
+The restricted interval covers the lunch break time (12:00–13:00):
 
 ```csharp
 TimeInterval lunchTime = new TimeInterval(DateTime.Today.AddHours(12), TimeSpan.FromHours(1));
 ```
 
-The helper method returns `false` if any part of the selected interval overlaps with the restricted time range:
+The `IsIntervalAllowed` method returns `false` if any part of the selected interval overlaps with the restricted time range:
 
 ```csharp
 private bool IsIntervalAllowed(TimeInterval interval) {
@@ -37,7 +42,7 @@ private bool IsIntervalAllowed(TimeInterval interval) {
 
 ### Prevent Appointment Creation
 
-The [`CustomAllowAppointmentCreate`](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentCreate) event blocks new appointment creation if the selected interval intersects with the lunch break:
+The [`CustomAllowAppointmentCreate`](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentCreate) event blocks new appointment creation if the selected interval intersects with the lunch break time:
 
 ```csharp
 private void schedulerControl1_CustomAllowAppointmentCreate(object sender, AppointmentItemOperationEventArgs e) {
@@ -46,7 +51,17 @@ private void schedulerControl1_CustomAllowAppointmentCreate(object sender, Appoi
 }
 ```
 
-### Prevent Appointment Dragging
+Disable the [`AllowAppointmentCreate`](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.AllowAppointmentCreate) property to turn off the default logic for creating appointments. The event handler applies custom rules for appointment creation in restricted time ranges.
+
+```xaml
+<dxsch:SchedulerControl
+    Name="schedulerControl1"
+    AllowAppointmentCreate="False"
+    CustomAllowAppointmentCreate="schedulerControl1_CustomAllowAppointmentCreate"
+    ... />
+```
+
+### Prevent Appointment Conflicts
 
 The [CustomAllowAppointmentConflicts](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentConflicts) event prevents dragging appointments into the lunch break time range:
 
@@ -54,6 +69,51 @@ The [CustomAllowAppointmentConflicts](https://docs.devexpress.com/WPF/DevExpress
 private void schedulerControl1_CustomAllowAppointmentConflicts(object sender, AppointmentItemConflictEventArgs e) {
     if (!IsIntervalAllowed(e.Interval))
         e.Conflicts.Add(e.AppointmentClone);
+}
+```
+
+Set the [`AllowAppointmentConflicts`](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.AllowAppointmentConflicts) property to `false` to disable sharing the schedule time between two or more appointments. Apply the handler that implements the custom logic:
+
+```xaml
+<dxsch:SchedulerControl
+    Name="schedulerControl1"
+    AllowAppointmentConflicts="False"
+    CustomAllowAppointmentConflicts="schedulerControl1_CustomAllowAppointmentConflicts"
+    ... />
+```
+
+### Toggle Restrictions
+
+Users can toggle restrictions through **Disable Creating Appointments** and **Disable Appointment Conflict** ribbon controls:  
+
+```xaml
+<dxr:RibbonPageGroup Caption="Restrictions">
+    <dxb:BarCheckItem 
+        Content="Disable Creating Appointments" 
+        CheckedChanged="BarButtonItem_ItemClick" 
+        .../>
+    <dxb:BarCheckItem 
+        Content="Disable Appointment Conflicts" 
+        CheckedChanged="barCheckItem2_CheckedChanged" 
+        .../>
+</dxr:RibbonPageGroup>
+```
+
+Each control enables or disables the related event handler:
+
+```csharp
+private void BarButtonItem_ItemClick(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e) {
+    if (barCheckItem1.IsChecked == true)
+        schedulerControl1.CustomAllowAppointmentCreate -= schedulerControl1_CustomAllowAppointmentCreate;
+    else
+        schedulerControl1.CustomAllowAppointmentCreate += schedulerControl1_CustomAllowAppointmentCreate;
+}
+
+private void barCheckItem2_CheckedChanged(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e) {
+    if (barCheckItem2.IsChecked == true)
+        schedulerControl1.CustomAllowAppointmentConflicts -= schedulerControl1_CustomAllowAppointmentConflicts;
+    else
+        schedulerControl1.CustomAllowAppointmentConflicts += schedulerControl1_CustomAllowAppointmentConflicts;
 }
 ```
 
