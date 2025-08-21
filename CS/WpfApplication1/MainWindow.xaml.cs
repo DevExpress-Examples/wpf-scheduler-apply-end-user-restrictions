@@ -14,7 +14,7 @@ namespace WpfApplication1 {
         #region #CustomAllowAppointmentCreate
         private void customAllowAppointmentCreateHandler(object sender, AppointmentItemOperationEventArgs e) {
             if((bool)barItemDisableCreatingAppointments.IsChecked) {
-                //If the "Disable Creating Appointments" bar item is checked, do not allow appointment creation.
+                // If the "Disable Creating Appointments" bar item is checked, do not allow appointment creation
                 e.Allow = false;
                 return;
             }
@@ -39,7 +39,7 @@ namespace WpfApplication1 {
         #endregion #CustomAllowAppointmentConflicts 
 
         #region #IsIntervalAllowed
-        //This method checks whether the target interval intersects with the restricted interval
+        // This method checks whether the target interval intersects with the restricted interval
         private bool IsIntervalAllowed(TimeInterval interval) {
             DateTime dayStart = interval.Start.Date;
 
