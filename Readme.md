@@ -10,7 +10,7 @@
 This example applies the following user restrictions:
 
 * Prevents users from creating new appointments.
-* Prevents users from moving appointments into the lunch break interval (12:00–13:00).
+* Prevents users from moving appointments to the lunch break interval (12:00–13:00).
 
 In this example, the Ribbon UI displays **Disable Creating Appointments** and **Disable Appointment Conflict** controls that toggle these restrictions.
 
@@ -45,7 +45,7 @@ private bool IsIntervalAllowed(TimeInterval interval) {
 The [`CustomAllowAppointmentCreate`](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentCreate) event allows you to define rules that restrict appointment creation. In this example, the event handler:
 
 * Blocks appointment creation if **Disable Creating Appointments** is turned on.
-* Prevents users from creating appointments during the launch time if **Disable Creating Appointments** is turned off.
+* Prevents users from creating appointments during lunch time if **Disable Creating Appointments** is turned off.
 
 ```csharp
 private void customAllowAppointmentCreateHandler(object sender, AppointmentItemOperationEventArgs e) {
@@ -64,7 +64,7 @@ The `barItemDisableCreatingAppointments.IsChecked` flag is bound to the **Disabl
 
 ### Resolve Appointment Conflicts
 
-The [CustomAllowAppointmentConflicts](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentConflicts) event allows you to control how the scheduler handles appointment conflicts. In this example, a conflict occurs when a user moves an appointment into a time interval that already contains another appointment or into the lunch break. In the Ribbon UI, you can enable the **Disable Appointment Conflicts** item to ignore conflicts.
+The [CustomAllowAppointmentConflicts](https://docs.devexpress.com/WPF/DevExpress.Xpf.Scheduling.SchedulerControl.CustomAllowAppointmentConflicts) event allows you to control how the scheduler handles appointment conflicts. In this example, a conflict occurs when a user moves an appointment to a time interval that already contains another appointment or to the lunch break time. In the Ribbon UI, you can enable the **Disable Appointment Conflicts** item to ignore conflicts.
 
 ```csharp
 private void customAllowAppointmentConflictsHandler(object sender, AppointmentItemConflictEventArgs e) {
