@@ -16,28 +16,33 @@ Namespace WpfApplication1
         End Sub
 
 #Region "#CustomAllowAppointmentCreate"
-        Private Sub schedulerControl1_CustomAllowAppointmentCreate(ByVal sender As Object, ByVal e As AppointmentItemOperationEventArgs)
-            'Retrieve the selected interval:
+        Private Sub customAllowAppointmentCreateHandler(ByVal sender As Object, ByVal e As AppointmentItemOperationEventArgs)
+            If CBool(Me.barItemDisableCreatingAppointments.IsChecked) Then
+                ' If the "Disable Creating Appointments" bar item is checked, do not allow appointment creation
+                e.Allow = False
+                Return
+            End If
+
             Dim selectedIntervalRange As DateTimeRange = Me.schedulerControl1.SelectedInterval
             Dim selectedInterval As TimeInterval = New TimeInterval(selectedIntervalRange.Start, selectedIntervalRange.End)
-            'Check whether the selected interval intersects with the resticted interval:
-            'If true, restrict appointment creation 
             e.Allow = IsIntervalAllowed(selectedInterval)
         End Sub
 
 #End Region  ' #CustomAllowAppointmentCreate
 #Region "#CustomAllowAppointmentConflicts"
-        Private Sub schedulerControl1_CustomAllowAppointmentConflicts(ByVal sender As Object, ByVal e As AppointmentItemConflictEventArgs)
-            'Obtain the selected interval:
+        Private Sub customAllowAppointmentConflictsHandler(ByVal sender As Object, ByVal e As AppointmentItemConflictEventArgs)
+            If CBool(Me.barItemDisableAppointmentConflicts.IsChecked) Then
+                e.Conflicts.Clear()
+                Return
+            End If
+
             Dim interval As TimeInterval = e.Interval
-            'If the appointment is to be moved to the restricted time interval, 
-            'Add the dragged appointment the conflicting appointments collection: 
             If Not IsIntervalAllowed(interval) Then e.Conflicts.Add(e.AppointmentClone)
         End Sub
 
 #End Region  ' #CustomAllowAppointmentConflicts 
 #Region "#IsIntervalAllowed"
-        'This method checks whether the target interval intersects with the resticted interval:
+        ' This method checks whether the target interval intersects with the restricted interval
         Private Function IsIntervalAllowed(ByVal interval As TimeInterval) As Boolean
             Dim dayStart As Date = interval.Start.Date
             While dayStart < interval.End
@@ -47,24 +52,6 @@ Namespace WpfApplication1
 
             Return True
         End Function
-
 #End Region  ' #IsIntervalAllowed
-#Region "#Events"
-        Private Sub BarButtonItem_ItemClick(ByVal sender As Object, ByVal e As DevExpress.Xpf.Bars.ItemClickEventArgs)
-            If Me.barCheckItem1.IsChecked = True Then
-                RemoveHandler Me.schedulerControl1.CustomAllowAppointmentCreate, AddressOf Me.schedulerControl1_CustomAllowAppointmentCreate
-            Else
-                AddHandler Me.schedulerControl1.CustomAllowAppointmentCreate, AddressOf Me.schedulerControl1_CustomAllowAppointmentCreate
-            End If
-        End Sub
-
-        Private Sub barCheckItem2_CheckedChanged(ByVal sender As Object, ByVal e As DevExpress.Xpf.Bars.ItemClickEventArgs)
-            If Me.barCheckItem2.IsChecked = True Then
-                RemoveHandler Me.schedulerControl1.CustomAllowAppointmentConflicts, AddressOf Me.schedulerControl1_CustomAllowAppointmentConflicts
-            Else
-                AddHandler Me.schedulerControl1.CustomAllowAppointmentConflicts, AddressOf Me.schedulerControl1_CustomAllowAppointmentConflicts
-            End If
-        End Sub
-#End Region  ' #Events	
     End Class
 End Namespace
